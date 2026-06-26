@@ -5,8 +5,8 @@ const BANK_ACCOUNT = "3800xxxxxxx"; // STK NHAN TIEN THU THUE
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyC5siKR793QjNv_Vd_PgqJftAbritN54CU",
-  authDomain: "agritax-fd278.firebaseapp.com",
-  databaseURL: "https://agritax-fd278-default-rtdb.firebaseio.com",
+  authDomain: "https://agriquangbinh.github.io/agritax/",
+  databaseURL: "https://agritax-fd278-default-rtdb.firebaseio.com/",
   projectId: "agritax-fd278",
   storageBucket: "agritax-fd278.firebasestorage.app",
   messagingSenderId: "105978575824",
