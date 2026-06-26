@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="https://cdn.haitrieu.com/wp-content/uploads/2022/01/Icon-Agribank.png">
+    <title>AGRIBANK QUẢNG BÌNH - Hỗ Trợ Thu Thuế Đất Phi NN</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="loginWrapper" class="login-wrapper">
+    <div id="loginSection">
+        <h2><img src="https://www.inlogo.vn/wp-content/uploads/2023/04/logo-agribank.png" height=18 width=18 alt="Logo Agribank" class="title-logo">
+            AGRIBANK QUẢNG BÌNH</h2>
+        <div class="login-subtitle">Hỗ Trợ Thu Thuế Đất Phi Nông Nghiệp</div>
+        
+        <div class="input-group">
+            <label for="loginUsername">🔑 Tên đăng nhập (Username)</label>
+            <input type="text" id="loginUsername" placeholder="Nhập tài khoản của bạn..." required>
+        </div>
+        
+        <div class="input-group">
+            <label for="loginPassword">🔒 Mật khẩu (Password)</label>
+            <input type="password" id="loginPassword" placeholder="Nhập mật khẩu..." required>
+        </div>
+        
+        <button onclick="window.loginWithUsernamePassword()">Đăng nhập hệ thống</button>
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #cbd5e1;">
+    </div>
+</div>
+
+<div id="mainSection" class="main-container hidden">
+    <div class="main-header">
+        <h2>AGRIBANK QUẢNG BÌNH - Hỗ Trợ Thu Thuế Đất Phi NN</h2>
+        <div class="user-info-box">
+            <span id="txtLoginUser" class="user-name">👤 Đang tải...</span>
+            <button onclick="window.logout()" class="btn-logout">Đăng xuất</button>
+        </div>
+        <div style="margin-top: 10px; text-align: right;">
+            <button onclick="window.goToChangePassPage()" style="background-color: #4f46e5; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; padding: 6px 12px;">
+                🔑 Đổi mật khẩu
+            </button>
+        </div>
+    </div>
+
+    <div class="filter-box">
+         <div class="filter-item">
+            <label for="filterPhuongXa">Phường/Xã:</label>
+            <select id="filterPhuongXa" onchange="window.updateThonToCombobox()">
+                <option value="">-- Tất cả Phường/Xã --</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="filterThonTo">Thôn/Tổ:</label>
+            <select id="filterThonTo">
+                <option value="">-- Tất cả Thôn/Tổ --</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="filterTrangThai">Trạng thái:</label>
+            <select id="filterTrangThai">
+                <option value="">-- Tất cả Trạng thái --</option>
+                <option value="true">Đã thanh toán</option>
+                <option value="false">Chưa thanh toán</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="searchName">Tìm theo Họ tên Người nộp thuế:</label>
+            <input type="text" id="searchName" placeholder="Ví dụ: nguyen, van a, nguy...">
+        </div>
+        <button id="btnSearch" onclick="window.searchData()" class="btn-search">Tìm kiếm</button>
+    </div>
+ 
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã số thuế</th>
+                    <th>Họ và Tên</th>
+                    <th>CCCD</th>
+                    <th>Thôn Tổ</th>
+                    <th>Phường Xã</th>
+                    <th>Mã phi NN</th>
+                    <th>Tiểu mục</th>
+                    <th>Số tiền nộp thuế</th>
+                    <th>Tổng cộng</th>
+                    <th>Trạng thái</th>
+                    <th style="text-align: center;">Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="taxTableBody">
+                <tr>
+                    <td colspan="11" style="text-align:center; color: #64748b; padding: 20px;">
+                        Vui lòng nhập điều kiện và bấm nút "Tìm kiếm"
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination-box">
+        <button onclick="window.prevPage()" id="btnPrev">◀ Trước</button>
+        <span id="pageInfo" class="page-info">Trang 1 / 1</span>
+        <button onclick="window.nextPage()" id="btnNext">Sau ▶</button>
+    </div>
+</div>
+
+<div id="qrPopup" class="popup-overlay hidden">
+    <div class="popup-content">
+        <h3>Mã QR Thanh Toán</h3>
+        <div id="qrInfo"></div>
+        <div class="qr-container">
+            <img id="qrImage" class="qr-img" src="" alt="Mã QR Chuyển Khoản">
+        </div>
+        
+        <div class="status-toggle-zone">
+            <span>Xác nhận đã nộp thuế</span>
+            <label class="switch">
+                <input type="checkbox" id="switchPaymentStatus" onchange="window.verifyAndPayChange(this)">
+                <span class="slider"></span>
+            </label>
+            <span id="toggleStatusLabel" style="font-weight: bold; min-width: 70px; text-align: right;">OFF</span>
+        </div>
+
+        <button onclick="window.closePopup()" class="btn-popup-close">Quay trở lại (Cancel)</button>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script type="module" src="script.js"></script>
+</body>
+</html>

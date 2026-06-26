@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đổi Mật Khẩu Cán Bộ</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 15px;
+        }
+        .card {
+            max-width: 400px;
+            width: 100%;
+            background: #ffffff;
+            padding: 30px 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(30, 41, 59, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #1e293b;
+            margin-bottom: 20px;
+            font-size: 20px;
+            text-transform: uppercase;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .form-group input[readonly] {
+            background-color: #e2e8f0;
+            color: #64748b;
+            cursor: not-allowed;
+            border-color: #cbd5e1;
+        }
+        .form-group input:focus:not([readonly]) {
+            border-color: #4f46e5;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            background: #4338ca;
+        }
+        .btn-back {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #64748b;
+            font-size: 13px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🔒 Đổi Mật Khẩu</h2>
+    
+    <div class="form-group">
+        <label>👤 Tài khoản cán bộ:</label>
+        <input type="text" id="txtUsername" readonly>
+    </div>
+    
+    <div class="form-group">
+        <label>🔑 Mật khẩu hiện tại:</label>
+        <input type="password" id="txtOldPass" placeholder="Nhập mật khẩu cũ...">
+    </div>
+    
+    <div class="form-group">
+        <label>🆕 Mật khẩu mới:</label>
+        <input type="password" id="txtNewPass" placeholder="Tối thiểu 6 ký tự...">
+    </div>
+    
+    <div class="form-group">
+        <label>🔄 Xác nhận mật khẩu mới:</label>
+        <input type="password" id="txtConfirmPass" placeholder="Nhập lại mật khẩu mới...">
+    </div>
+    
+    <button class="btn-submit" onclick="executeChangePassword()">Xác nhận đổi mật khẩu</button>
+    <a href="index.html" class="btn-back">⬅ Quay lại hệ thống</a>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAOSKLNPXp-s40iJNYYzdEWDnQDFoa6x_Q",
+        authDomain: "thue2026-f558d.firebaseapp.com",
+        databaseURL: "https://thue2026-f558d-default-rtdb.firebaseio.com",
+        projectId: "thue2026-f558d",
+        storageBucket: "thue2026-f558d.firebasestorage.app",
+        messagingSenderId: "1008017359572",
+        appId: "1:1008017359572:web:f70cf40778e600e8deb141"
+    };
+    
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+// Thay thế đoạn script xử lý trong file changepass.html
+
+let currentIdKey = null; // Biến toàn cục để lưu trữ id_key nhận từ trang chính
+
+// Tự động chạy khi vừa mở trang đổi mật khẩu
+window.onload = function() {
+    const savedUsername = sessionStorage.getItem('changePassUsername');
+    const savedIdKey = sessionStorage.getItem('changePassIdKey');
+    
+    // Nếu có đầy đủ thông tin từ trang chính truyền sang
+    if (savedUsername && savedIdKey) {
+        document.getElementById('txtUsername').value = savedUsername; // Đưa vào textbox
+        currentIdKey = savedIdKey;                                   // Lưu id_key vào biến
+    } else {
+        alert("Không tìm thấy thông tin phiên làm việc hợp lệ. Vui lòng quay lại!");
+        window.location.href = "index.html";
+    }
+};
+
+function executeChangePassword() {
+    const oldPass = document.getElementById('txtOldPass').value.trim();
+    const newPass = document.getElementById('txtNewPass').value.trim();
+    const confirmPass = document.getElementById('txtConfirmPass').value.trim();
+
+    if (!oldPass || !newPass || !confirmPass) {
+        alert("Vui lòng điền đầy đủ thông tin vào tất cả các ô!");
+        return;
+    }
+
+    if (newPass !== confirmPass) {
+        alert("Xác nhận mật khẩu mới không trùng khớp!");
+        return;
+    }
+
+    if (newPass.length < 6) {
+        alert("Mật khẩu mới phải từ 6 ký tự trở lên!");
+        return;
+    }
+
+    // Lúc này đã có sẵn currentIdKey trực tiếp (ví dụ: 'users/canbo01') -> Không cần orderByChild nữa
+    db.ref('users/' + currentIdKey).once('value').then((snapshot) => {
+        const userData = snapshot.val();
+        
+        if (userData) {
+            // Ép kiểu String tuyệt đối để so sánh chính xác (Sửa lỗi số 123)
+            const dbPasswordStr = String(userData.password).trim();
+            const inputPasswordStr = String(oldPass).trim();
+
+            if (dbPasswordStr === inputPasswordStr) {
+                // Tiến hành cập nhật thẳng vào node id_key cụ thể
+                db.ref('users/' + currentIdKey).update({
+                    password: String(newPass)
+                }).then(() => {
+                    alert("Đổi mật khẩu thành công! Hệ thống sẽ chuyển về trang đăng nhập.");
+                    sessionStorage.clear(); // Xóa sạch session cũ để bắt buộc đăng nhập lại
+                    window.location.href = "index.html";
+                }).catch(err => {
+                    alert("Lỗi khi ghi nhận mật khẩu mới: " + err.message);
+                });
+            } else {
+                alert("Mật khẩu hiện tại không chính xác!");
+            }
+        } else {
+            alert("Dữ liệu tài khoản đã bị thay đổi hoặc không tồn tại!");
+        }
+    }).catch(err => {
+        alert("Lỗi kết nối cơ sở dữ liệu: " + err.message);
+    });
+}
+    
+</script>
+</body>
+</html>

@@ -1,0 +1,426 @@
+/* ==========================================================================
+   1. RESET & NỀN TẢNG (Tối ưu cho cả PC và Mobile)
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #334155;
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   2. MÀN HÌNH ĐĂNG NHẬP (Login wrapper)
+   ========================================================================== */
+.login-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 16px;
+}
+
+#loginSection {
+    max-width: 420px;
+    width: 100%;
+    background: #ffffff;
+    padding: 30px 20px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+#loginSection h2 {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.login-subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 24px;
+}
+
+.input-group {
+    margin-bottom: 16px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #475569;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.input-group input:focus {
+    border-color: #3b82f6;
+}
+
+#loginSection button {
+    width: 100%;
+    padding: 12px;
+    background-color: #1e3a8a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+/* ==========================================================================
+   3. KHUNG CHÍNH (Main Layout)
+   ========================================================================== */
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+.main-header {
+    background-color: #1e3a8a;
+    color: white;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.main-header h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.user-info-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.btn-logout {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   4. BỘ LỌC TÌM KIẾM (Filter Box - Tự co giãn linh hoạt trên Mobile)
+   ========================================================================== */
+.filter-box {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 16px;
+}
+
+.filter-item {
+    margin-bottom: 12px;
+}
+
+.filter-item label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #475569;
+}
+
+.filter-item select, 
+.filter-item input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #f8fafc;
+    outline: none;
+}
+
+.filter-item input[type="text"]:focus {
+    border-color: #10b981;
+    background-color: #fff;
+}
+
+.btn-search {
+    width: 100%;
+    padding: 12px;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+/* Biến đổi bộ lọc thành hàng ngang trên máy tính (PC) */
+@media (min-width: 768px) {
+    .main-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .main-header h2 {
+        margin-bottom: 0;
+        font-size: 22px;
+    }
+    .filter-box {
+        display: table;
+        width: 100%;
+    }
+    .filter-item {
+        display: table-cell;
+        padding-right: 12px;
+        vertical-align: bottom;
+        margin-bottom: 0;
+    }
+    .btn-search {
+        display: table-cell;
+        width: 120px;
+        height: 42px;
+    }
+}
+
+/* ==========================================================================
+   5. BẢNG DỮ LIỆU (Responsive Table)
+   ========================================================================== */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto; /* Tạo thanh cuộn ngang riêng cho bảng trên điện thoại */
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 16px;
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+    min-width: 850px; /* Ép bảng có độ rộng tối thiểu để không bị dúm chữ */
+}
+
+th, td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e2e8f0;
+    border-right: 1px solid #f1f5f9;
+}
+
+th {
+    background-color: #f1f5f9;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.btn-table-qr {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap; /* Không cho chữ trong nút xuống dòng */
+}
+
+/* ==========================================================================
+   6. PHÂN TRANG (Pagination)
+   ========================================================================== */
+.pagination-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.pagination-box button {
+    padding: 8px 16px;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.pagination-box button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-info {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   7. POPUP MÃ QR & CÔNG TẮC GẠT ON/OFF
+   ========================================================================== */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 16px;
+}
+
+.popup-content {
+    background: white;
+    width: 100%;
+    max-width: 360px;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.popup-content h3 {
+    text-align: center;
+    margin-bottom: 14px;
+    color: #1e3a8a;
+    font-size: 18px;
+}
+
+#qrInfo {
+    font-size: 13px;
+    background: #f8fafc;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.qr-container {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 16px auto;
+}
+
+.qr-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+/* THAY THẾ KHU VỰC CÔNG TẮC GẠT ON/OFF TRÊN POPUP */
+.status-toggle-zone {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 15px 0;
+    padding: 12px;
+    background-color: #f1f5f9;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+.status-toggle-zone span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #cbd5e1;
+    transition: .3s;
+    border-radius: 24px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: #10b981;
+}
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+
+.btn-popup-close {
+    width: 100%;
+    padding: 12px;
+    background-color: #64748b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* TIỆN ÍCH ẨN ĐI */
+.hidden {
+    display: none !important;
+}
