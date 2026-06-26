@@ -1,15 +1,17 @@
 
 import { executeGenerateQr, executeVerifyAndPayChange } from "./app.js";
 const BANK_BIN = "970405"; // Mã định danh BIN của Agribank
-const BANK_ACCOUNT = "3902xxxxxxx"; // STK NHAN TIEN THU THUE
-const firebaseConfig = { //THONG TIN firebase
-    apiKey: "",
-    authDomain: "",
-    databaseURL: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: ""
+const BANK_ACCOUNT = "3800xxxxxxx"; // STK NHAN TIEN THU THUE
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyC5siKR793QjNv_Vd_PgqJftAbritN54CU",
+  authDomain: "agritax-fd278.firebaseapp.com",
+  databaseURL: "https://agritax-fd278-default-rtdb.firebaseio.com",
+  projectId: "agritax-fd278",
+  storageBucket: "agritax-fd278.firebasestorage.app",
+  messagingSenderId: "105978575824",
+  appId: "1:105978575824:web:05cb743bdc2f2e2c6bd7d5",
+  measurementId: "G-G3B29JB86K"
 };
 
 if (!firebase.apps.length) {
