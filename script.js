@@ -427,7 +427,137 @@ function goToChangePassPage() {
         alert("Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại!");
     }
 }
+// Thêm vào cuối script.js (trước window.* exports)
 
+// Thư viện QR Code (thêm vào <head> của HTML)
+// <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+// Thư viện ExcelJS (thêm vào <head> của HTML)
+// <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
+
+async function generateBulkQR() {
+    if (!filteredData || filteredData.length === 0) {
+        alert("Vui lòng tìm kiếm dữ liệu trước!");
+        return;
+    }
+
+    const confirmBulk = confirm(`Bạn muốn tạo QR cho ${filteredData.length} bản ghi?\n\nLưu ý: Quá trình này có thể mất vài phút.`);
+    if (!confirmBulk) return;
+
+    const btn = document.getElementById('btnBulkQR');
+    btn.disabled = true;
+    btn.textContent = '⏳ Đang xử lý...';
+
+    try {
+        // Tạo workbook Excel
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Danh sách QR');
+
+        // Thiết lập cột
+        worksheet.columns = [
+            { header: 'STT', key: 'stt', width: 5 },
+            { header: 'Mã số thuế', key: 'MaSoThue', width: 15 },
+            { header: 'Họ và Tên', key: 'HoTen', width: 20 },
+            { header: 'CCCD', key: 'CCCD', width: 15 },
+            { header: 'Phường/Xã', key: 'PhuongXa', width: 15 },
+            { header: 'Thôn/Tổ', key: 'ThonTo', width: 15 },
+            { header: 'Số tiền (đ)', key: 'SoTien', width: 15 },
+            { header: 'Mã QR', key: 'QRCode', width: 25 }
+        ];
+
+        // Thêm dữ liệu và QR
+        for (let i = 0; i < filteredData.length; i++) {
+            const item = filteredData[i];
+            
+            // Tạo dữ liệu QR
+            const qrData = generateQRData(item);
+            const qrImage = await generateQRImage(qrData);
+
+            // Thêm hàng vào Excel
+            const row = worksheet.addRow({
+                stt: i + 1,
+                MaSoThue: item.MaSoThue || '',
+                HoTen: (item.Ho || '') + ' ' + (item.Ten || ''),
+                CCCD: item.CCCD || '',
+                PhuongXa: item.PhuongXa || '',
+                ThonTo: item.ThonTo || '',
+                SoTien: item.SoTienThuThue ? Number(item.SoTienThuThue).toLocaleString('vi-VN') : 0,
+                QRCode: qrData
+            });
+
+            // Thêm hình ảnh QR vào cell
+            if (qrImage) {
+                const imageId = workbook.addImage({
+                    base64: qrImage,
+                    extension: 'png'
+                });
+                worksheet.addImage(imageId, `H${row.number}`, {
+                    tl: { col: 7.2, row: i },
+                    ext: { width: 100, height: 100 }
+                });
+                row.height = 110; // Tăng chiều cao hàng
+            }
+        }
+
+        // Format header
+        worksheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
+        worksheet.getRow(1).fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FF059669' }
+        };
+
+        // Xuất file
+        const timestamp = new Date().toISOString().slice(0, 10);
+        await workbook.xlsx.writeFile(`QR_DanhSach_${timestamp}.xlsx`);
+        
+        alert(`✅ Tạo thành công ${filteredData.length} mã QR!\nFile: QR_DanhSach_${timestamp}.xlsx`);
+    } catch (error) {
+        console.error('Lỗi tạo QR hàng loạt:', error);
+        alert('❌ Lỗi: ' + error.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '📊 Tạo QR Hàng Loạt & Xuất Excel';
+    }
+}
+
+function generateQRData(item) {
+    const amount = Number(item.SoTienThuThue) || 0;
+    
+    // Format theo VietQR standard
+    return `00020126360014COM.VIETQR0111${BANK_ACCOUNT}${BANK_BIN}5802VN5913AGRIBANK6009QUANG BINH62370015A000000067701240014AGRIBANK QR6304${generateCRC16(amount)}`;
+}
+
+function generateCRC16(amount) {
+    // Placeholder - dùng hàm CRC thực tế hoặc hãy dùng thư viện
+    return Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+}
+
+async function generateQRImage(text) {
+    return new Promise((resolve) => {
+        try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Sử dụng QRCode.js
+            const qr = new QRCode({
+                text: text,
+                width: 200,
+                height: 200,
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            const img = qr._oDrawing._elCanvas;
+            const base64 = img.toDataURL('image/png');
+            resolve(base64);
+        } catch (error) {
+            console.error('Lỗi tạo QR:', error);
+            resolve(null);
+        }
+    });
+}
+
+window.generateBulkQR = generateBulkQR;
 window.isUpdatingToggle = false;
 window.clearCurrentSelectedIdSum = function() { currentSelectedIdSum = null; };
 window.loginWithUsernamePassword = loginWithUsernamePassword;
