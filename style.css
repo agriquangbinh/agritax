@@ -424,3 +424,24 @@ input:checked + .slider:before {
 .hidden {
     display: none !important;
 }
+/* Thêm vào style.css nút xuất excel */
+.btn-bulk-qr {
+    background-color: #059669;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.btn-bulk-qr:hover {
+    background-color: #047857;
+}
+
+.btn-bulk-qr:disabled {
+    background-color: #cbd5e1;
+    cursor: not-allowed;
+}
