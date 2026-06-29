@@ -1,7 +1,7 @@
 
 import { executeGenerateQr, executeVerifyAndPayChange } from "./app.js";
 const BANK_BIN = "970405"; // Mã định danh BIN của Agribank
-const BANK_ACCOUNT = "3800205138888"; // STK NHAN TIEN THU THUE
+const BANK_ACCOUNT = "3800207000643"; // STK NHAN TIEN THU THUE
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyC5siKR793QjNv_Vd_PgqJftAbritN54CU",
